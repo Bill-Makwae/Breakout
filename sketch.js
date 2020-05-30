@@ -12,7 +12,8 @@ var Category1 = 0x0001,
       Category2 = 0x0002,
       Category3 = 0x0003;
 
-const colors = ["Crimson", "Brown", "BlanchedAlmond", "Chocolate"]
+const colors = ["Crimson", "Brown", "BlanchedAlmond", "Chocolate",
+                "Coral", "DarkKhaki", "DarkOliveGreen", "RosyBrown"]
 
 function setup() {
   // put setup code here.
