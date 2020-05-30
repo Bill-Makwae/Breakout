@@ -3,15 +3,22 @@
 
 var ball;
 var paddle;
+var paddle2;
+var paddle3;
 var floor;
 var blocks;
 var blockSize;
+
 const colors = ["Crimson", "Brown", "BlanchedAlmond", "Chocolate"]
 
 function setup() {
   // put setup code here.
-  createCanvas(windowWidth-20, windowHeight-20);
-  matter.mouseInteraction();
+  var canvas = createCanvas(windowWidth-20, windowHeight-20);
+  matter.init();
+
+  
+  matter.mouseInteraction(canvas);
+  
   canvasMouse = Matter.Mouse.create(canvas.elt);
   canvasMouse.pixelRatio = pixelDensity();
   //the size of the blocks is set to 10 percent of the height of the window
@@ -24,22 +31,34 @@ function setup() {
   for (let i = 0; i < (width/blockSize); i++){
     for (let j = 1; j * 20 < (blockRows); j++){
       let b = matter.makeBarrier(i*blockSize, j*20, blockSize, 20);
+      b.body.isBreakable = true;
       b.color = colors[Math.floor(Math.random() * colors.length)];
       blocks.push(b);
     }
   }
 
-  //the paddle is now mapped to the mouse, but needs to be
-  //centered. It also needs to be restrained to the play area.
+  //The paddle has to be shaped differently in order to change the 
+  //way the game is played.
+  
+  
+  
   
   paddle = matter.makeBarrier(width/2, height*0.9, 2*blockSize, 40);
   paddle.body.restitution = 1.0;
-  console.log(paddle)
-  paddle.move = function(){
-    this.setPosition(mouseX, mouseY);
-  };
   
+  paddle.move = function(){
+    let mx = constrain(mouseX, 0, width);
+    let my = constrain(mouseY, 0.4*height, height)
+    this.setPosition(mx, my);
+  };
   paddle.color = "Aqua";
+
+  // paddle2 = matter.makeBlock((width/2)+30, height*0.9, 2*blockSize, 40);
+  // paddle.body.inertia = Infinity;
+  // paddle2.body.angle = 45;
+  // paddle2.color = "Aqua";
+
+  // matter.connect(paddle, paddle2);
 
 
   ///This is creating the game ball
@@ -49,6 +68,8 @@ function setup() {
   // ball.body.restitution = 1.0;
   // floor = matter.makeBarrier(width / 2, height, width, 50);
   // floor.body.restitution = 1.0;
+  runCollisions();
+  
 }
 
 function draw() {
@@ -63,6 +84,7 @@ function draw() {
   fill(paddle.color);
   paddle.move();
   paddle.show();
+  
 
 
 
@@ -90,6 +112,24 @@ function createBall(){
   ballT.body.frictionAir = 0;
   ballT.body.frictionStatic = 0;
   ballT.color = "Blue";
+  ballT.velocity = (30, 0);
   return ballT;
 
+}
+
+function runCollisions(){
+  Matter.Events.on(engine, 'collisionActive', function(event) {
+    var pairs = event.pairs;
+
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i];
+        if (pair.bodyA.label != "Circle Body"){
+          console.log(pair.bodyA)
+         
+        }
+        if (pair.bodyB.label != "Circle Body"){
+          
+        }
+    }
+  });
 }
