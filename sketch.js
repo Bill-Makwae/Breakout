@@ -1,6 +1,3 @@
-/* This is the start of a simple p5.js sketch using p5-matter.
- Use this as a template for creating your own sketches! */
-
 var ball;
 var paddle;
 var paddle2;
@@ -8,12 +5,13 @@ var paddle3;
 var floor;
 var blocks;
 var blockSize;
-var Category1 = 0x0001,
-      Category2 = 0x0002,
-      Category3 = 0x0003;
-
+var Category1 = 0x0001;
+var Category2 = 0x0002;
+var deaths = 0;
+var completion;
+      
 const colors = ["Crimson", "Brown", "BlanchedAlmond", "Chocolate",
-                "Coral", "DarkKhaki", "DarkOliveGreen", "RosyBrown"]
+                "Coral", "DarkKhaki", "RosyBrown"]
 
 function setup() {
   // put setup code here.
@@ -40,13 +38,10 @@ function setup() {
       blocks.push(b);
     }
   }
+  completion = blocks.length;
 
   //The paddle has to be shaped differently in order to change the 
   //way the game is played.
-  
-        
-  
-  
   
   paddle = matter.makeBall(width/2, height*0.9, 1.5*blockSize, {
     collisionFilter: {
@@ -65,33 +60,8 @@ function setup() {
   };
   paddle.color = "Aqua";
 
-  // paddle2 = matter.makeBlock((width/2)+30, height*0.9, blockSize, 40, {
-  //   collisionFilter: {
-  //     mask: Category1
-  //   },
-  //   inertia: Infinity,
-  //   angle: 45
-  // });
-  
-  // paddle2.body.angle = 45;
-  // paddle2.color = "Aqua";
-  // paddle2.move = function(){
-  //   let mx = constrain(mouseX + (blockSize), 0, width);
-  //   let my = constrain(mouseY , 0.4*height, height)
-  //   this.setPosition(mx, my);
-  // }
-
-
-  //matter.connect(paddle, paddle2);
-
-
-  ///This is creating the game ball
   ball = createBall();
   
-  // ball = matter.makeBall(width / 2, 40, 80);
-  // ball.body.restitution = 1.0;
-  // floor = matter.makeBarrier(width / 2, height, width, 50);
-  // floor.body.restitution = 1.0;
   runCollisions();
   matter.changeGravity(0, 0.5);
 }
@@ -107,29 +77,23 @@ function draw() {
 
   fill(paddle.color);
   paddle.move();
-  
   paddle.show();
-  
-  
-
-
 
   fill(ball.color);
   ball.show();
   if(ball.isOffCanvas()){
     matter.forget(ball);
     ball = createBall();
-    
+    deaths += 1;
   }
+
+  fill(0, 0, 0, 100);
+  textSize(0.20*width);
+  text(deaths, 0, 0.5*height);
+  let rate = blocks.length != 0 ? (blocks.length*100/completion).toFixed(2): "DONE";
+  text(rate, width - textWidth(rate), height/2)
+
   
-
-
-
-  // fill(127);
-  // floor.show();
-
-  // fill(255);
-  // ball.show();
 }
 
 function createBall(){
