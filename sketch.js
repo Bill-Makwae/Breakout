@@ -8,6 +8,7 @@ var blockSize;
 var Category1 = 0x0001;
 var Category2 = 0x0002;
 var deaths = 0;
+var finalScore = null;
 var completion;
       
 const colors = ["Crimson", "Brown", "BlanchedAlmond", "Chocolate",
@@ -87,10 +88,19 @@ function draw() {
     deaths += 1;
   }
 
+  let rate = blocks.length != 0 ? (blocks.length*100/completion).toFixed(2): "DONE";
   fill(0, 0, 0, 100);
   textSize(0.20*width);
-  text(deaths, 0, 0.5*height);
-  let rate = blocks.length != 0 ? (blocks.length*100/completion).toFixed(2): "DONE";
+  if (rate == "DONE" && finalScore == null){
+    finalScore = deaths;
+  }
+  if (finalScore != null){
+    text(finalScore, 0, 0.5*height);
+  } else {
+    text(deaths, 0, 0.5*height);
+  }
+  // text(deaths, 0, 0.5*height);
+  
   text(rate, width - textWidth(rate), height/2)
 
   
