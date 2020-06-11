@@ -5,6 +5,7 @@ var paddle3;
 var floor;
 var blocks;
 var blockSize;
+var blockHeight;
 var Category1 = 0x0001;
 var Category2 = 0x0002;
 var deaths = 0;
@@ -27,13 +28,12 @@ function setup() {
   //the size of the blocks is set to 10 percent of the height of the window
   blockSize = Math.floor(width*0.1)
   const blockRows = Math.floor(height*0.25)
+  blockHeight = Math.floor(blockRows*0.2)
   blocks = [];
-  // this could be cleaned up a bit, but the 20 is the height of 
-  // of the blocks, and they fit within 20% of the height of the
-  //canvas
+  //the blocks are scaled so that there are 5 rows of blocks
   for (let i = 0; i < (width/blockSize); i++){
-    for (let j = 1; j * 20 < (blockRows); j++){
-      let b = matter.makeBarrier(i*blockSize, j*20, blockSize, 20);
+    for (let j = 1; j * blockHeight < (blockRows); j++){
+      let b = matter.makeBarrier(i*blockSize, j*blockHeight, blockSize, blockHeight);
       b.body.isBreakable = true;
       b.color = colors[Math.floor(Math.random() * colors.length)];
       blocks.push(b);
